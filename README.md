@@ -28,15 +28,15 @@ Homebrew를 사용하여 설치
 
 `mosquitto_pub -h localhost -p 1883 -t "vehicle/status" -m "MOVING"`
 
-mosquitto_pub: Mosquitto에서 제공하는 MQTT 퍼블리셔(Publisher) 클라이언트 도구.
+- mosquitto_pub: Mosquitto에서 제공하는 MQTT 퍼블리셔(Publisher) 클라이언트 도구.
 
--h localhost: 브로커 주소(host) 지정. ex) -h 192.168.1.100 또는 -h broker.example.com
+- -h localhost: 브로커 주소(host) 지정. ex) -h 192.168.1.100 또는 -h broker.example.com
 
--p 1883: 브로커 포트 지정.
+- -p 1883: 브로커 포트 지정.
 
--t "vehicle/status": 토픽 지정.
+- -t "vehicle/status": 토픽 지정.
 
--m "MOVING": 메시지 지정.
+- -m "MOVING": 메시지 지정.
 
 ### 3. Spring 애플리케이션에서 메시지 수신 확인.
 ```
