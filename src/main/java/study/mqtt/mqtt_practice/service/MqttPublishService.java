@@ -1,6 +1,7 @@
 package study.mqtt.mqtt_practice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MqttPublishService {
 
     private final MessageChannel mqttOutboundChannel;
@@ -20,6 +22,7 @@ public class MqttPublishService {
                 .build();
 
         mqttOutboundChannel.send(message);
-        System.out.println("Published to topic: " + topic + " with payload: " + payload);
+
+        log.info("Published to topic: {} with payload: {}", topic, payload);
     }
 }

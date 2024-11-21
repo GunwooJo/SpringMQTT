@@ -1,5 +1,6 @@
 package study.mqtt.mqtt_practice.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import study.mqtt.mqtt_practice.service.VehicleStatusService;
 import java.util.UUID;
 
 @Configuration
+@Slf4j
 public class MqttConfig {
 
     private static final String BROKER_URL = "tcp://localhost:1883"; // Mosquitto 브로커 주소
@@ -71,7 +73,7 @@ public class MqttConfig {
     public MessageHandler mqttInputHandler(VehicleStatusService vehicleStatusService) {
         return message -> {
             String payload = message.getPayload().toString();
-            System.out.println("Received message: " + payload);
+            log.info("Received message: {}", payload);
 
             // 메시지에 따라 로직 처리
             vehicleStatusService.processStatus(payload);
@@ -98,7 +100,7 @@ public class MqttConfig {
     public MessageHandler errorHandler() {
         return message -> {
             Throwable cause = (Throwable) message.getPayload();
-            System.err.println("Error sending MQTT message: " + cause.getMessage());
+            log.error("Error sending MQTT message: {}", cause.getMessage());
         };
     }
 }

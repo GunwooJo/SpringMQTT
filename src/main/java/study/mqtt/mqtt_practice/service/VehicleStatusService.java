@@ -1,25 +1,27 @@
 package study.mqtt.mqtt_practice.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class VehicleStatusService {
 
     public void processStatus(String status) {
         // 수신한 상태 메시지 처리
         switch (status) {
             case "STOPPED":
-                System.out.println("Vehicle has stopped. Taking no action.");
+                log.info("Vehicle has stopped. Taking no action.");
                 break;
             case "MOVING":
-                System.out.println("Vehicle is moving. Monitoring...");
+                log.info("Vehicle is moving. Monitoring...");
                 break;
             case "ERROR":
-                System.out.println("Vehicle reported an error. Sending alert!");
+                log.info("Vehicle reported an error. Sending alert!");
                 sendAlert();
                 break;
             default:
-                System.out.println("Unknown status received: " + status);
+                log.error("Unknown status received: {}", status);
         }
     }
 
