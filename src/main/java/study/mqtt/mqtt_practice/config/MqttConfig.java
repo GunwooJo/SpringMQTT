@@ -79,4 +79,14 @@ public class MqttConfig {
         messageHandler.setDefaultTopic("default/topic"); // 기본 토픽 설정 (필요 시 변경 가능)
         return messageHandler;
     }
+
+    // 메시지 전송 실패에 대한 핸들러
+    @Bean
+    @ServiceActivator(inputChannel = "errorChannel")
+    public MessageHandler errorHandler() {
+        return message -> {
+            Throwable cause = (Throwable) message.getPayload();
+            System.err.println("Error sending MQTT message: " + cause.getMessage());
+        };
+    }
 }
