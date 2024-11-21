@@ -1,2 +1,5 @@
 mqtt:
   qos: 1
+  topics:
+    input: "vehicle/status"
+    output: "default/topic"

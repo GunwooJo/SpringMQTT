@@ -23,6 +23,12 @@ public class MqttConfig {
     @Value("${mqtt.qos}")
     private int mqttQos;
 
+    @Value("${mqtt.topics.input}")
+    private String inputTopic;
+
+    @Value("${mqtt.topics.output}")
+    private String outputTopic;
+
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
@@ -41,7 +47,7 @@ public class MqttConfig {
     @Bean
     public MqttPahoMessageDrivenChannelAdapter adapter(MessageChannel mqttInputChannel) {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter(CLIENT_ID + "_subscriber", mqttClientFactory(), "vehicle/status");
+                new MqttPahoMessageDrivenChannelAdapter(CLIENT_ID + "_subscriber", mqttClientFactory(), inputTopic);
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(mqttQos);
@@ -80,7 +86,7 @@ public class MqttConfig {
     public MessageHandler mqttOutboundHandler() {
         MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(CLIENT_ID + "_publisher", mqttClientFactory());
         messageHandler.setAsync(true); // 비동기 전송
-        messageHandler.setDefaultTopic("default/topic"); // 기본 토픽 설정 (필요 시 변경 가능)
+        messageHandler.setDefaultTopic(outputTopic);
         return messageHandler;
     }
 
