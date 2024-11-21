@@ -7,6 +7,7 @@ import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
+import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
@@ -36,7 +37,7 @@ public class MqttConfig {
     @Bean
     public MqttPahoMessageDrivenChannelAdapter adapter(MessageChannel mqttInputChannel) {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter(CLIENT_ID, mqttClientFactory(), "vehicle/status");
+                new MqttPahoMessageDrivenChannelAdapter(CLIENT_ID + "_subscriber", mqttClientFactory(), "vehicle/status");
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(1);
@@ -44,6 +45,10 @@ public class MqttConfig {
         return adapter;
     }
 
+    /*
+    DirectChannel은 Spring Integration에서 제공하는 메시지 채널 중 하나로, 메시지를 동기적으로 전달.
+    그 외 QueueChannel, PublishSubscribeChannel, ExecutorChannel, PriorityChannel 등이 있음.
+     */
     @Bean
     public MessageChannel mqttInputChannel() {
         return new DirectChannel();
@@ -51,7 +56,7 @@ public class MqttConfig {
 
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
-    public MessageHandler handler(VehicleStatusService vehicleStatusService) {
+    public MessageHandler mqttInputHandler(VehicleStatusService vehicleStatusService) {
         return message -> {
             String payload = message.getPayload().toString();
             System.out.println("Received message: " + payload);
@@ -59,5 +64,19 @@ public class MqttConfig {
             // 메시지에 따라 로직 처리
             vehicleStatusService.processStatus(payload);
         };
+    }
+
+    @Bean
+    public MessageChannel mqttOutboundChannel() { // 메시지 발행에 사용할 출력 채널을 정의
+        return new DirectChannel();
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "mqttOutboundChannel")
+    public MessageHandler mqttOutboundHandler() {
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(CLIENT_ID + "_publisher", mqttClientFactory());
+        messageHandler.setAsync(true); // 비동기 전송
+        messageHandler.setDefaultTopic("default/topic"); // 기본 토픽 설정 (필요 시 변경 가능)
+        return messageHandler;
     }
 }
