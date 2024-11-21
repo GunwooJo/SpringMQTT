@@ -3,3 +3,5 @@ mqtt:
   topics:
     input: "vehicle/status"
     output: "default/topic"
+  broker:
+    url: "tcp://localhost:1883"

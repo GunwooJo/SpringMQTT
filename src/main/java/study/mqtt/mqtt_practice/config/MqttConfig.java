@@ -21,8 +21,10 @@ import java.util.UUID;
 @Slf4j
 public class MqttConfig {
 
-    private static final String BROKER_URL = "tcp://localhost:1883"; // Mosquitto 브로커 주소
     private static final String CLIENT_ID = "vehicleControlCenter_" + UUID.randomUUID(); //  Spring 애플리케이션을 여러 서버에서 실행할 때 클라이언트 ID가 중복되지 않도록 UUID 사용. 단일 서버면 UUID를 사용하지 않아도 됨.
+
+    @Value("${mqtt.broker.url}")
+    private String brokerUrl; // Mosquitto 브로커 주소
 
     @Value("${mqtt.qos}")
     private int mqttQos;
@@ -36,7 +38,7 @@ public class MqttConfig {
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setServerURIs(new String[]{BROKER_URL});
+        options.setServerURIs(new String[]{brokerUrl});
         options.setCleanSession(true); // 클라이언트 연결 시 브로커가 이전 세션 정보를 제거하도록 설정.
         return options;
     }
