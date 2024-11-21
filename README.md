@@ -1,7 +1,8 @@
-# Spring에서 MQTT를 사용하기 위한 설정
+# Spring에서 MQTT를 사용하는 샘플 코드
 
+- 메시지 발행과 구독 모두 가능.
 - 메시지 브로커로 mosquitto를 사용.
-- 특정 토픽에 대해 메시지를 수신하면 로그를 출력.
+- 특정 토픽에 대해 메시지를 수신, 발신하면 로그를 출력.
 
 ## 버전
 
@@ -22,6 +23,8 @@ Homebrew를 사용하여 설치
 
 ## 작동 테스트
 
+### 메시지 수신 테스트
+
 ### 1. Spring 애플리케이션 실행.
 
 ### 2. MQTT 브로커에 메시지를 publish.
@@ -39,7 +42,16 @@ Homebrew를 사용하여 설치
 - -m "MOVING": 메시지 지정.
 
 ### 3. Spring 애플리케이션에서 메시지 수신 확인.
+
 ```
 Received message: MOVING
 Vehicle is moving. Monitoring...
 ```
+
+### 메시지 발행 테스트
+
+### 1. '/publish' 엔드포인트로 GET 요청을 보내면 메시지를 발행.
+
+### 2. Spring 애플리케이션에서 로그 확인.
+
+` Published to topic: vehicle/status with payload: MOVING `
