@@ -14,11 +14,13 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import study.mqtt.mqtt_practice.service.VehicleStatusService;
 
+import java.util.UUID;
+
 @Configuration
 public class MqttConfig {
 
     private static final String BROKER_URL = "tcp://localhost:1883"; // Mosquitto 브로커 주소
-    private static final String CLIENT_ID = "autonomousVehicleClient";
+    private static final String CLIENT_ID = "vehicleControlCenter_" + UUID.randomUUID(); //  Spring 애플리케이션을 여러 서버에서 실행할 때 클라이언트 ID가 중복되지 않도록 UUID 사용. 단일 서버면 UUID를 사용하지 않아도 됨.
 
     @Value("${mqtt.qos}")
     private int mqttQos;
