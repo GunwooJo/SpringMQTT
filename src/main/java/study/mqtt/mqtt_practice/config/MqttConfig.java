@@ -1,6 +1,7 @@
 package study.mqtt.mqtt_practice.config;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -18,6 +19,9 @@ public class MqttConfig {
 
     private static final String BROKER_URL = "tcp://localhost:1883"; // Mosquitto 브로커 주소
     private static final String CLIENT_ID = "autonomousVehicleClient";
+
+    @Value("${mqtt.qos}")
+    private int mqttQos;
 
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
@@ -40,7 +44,7 @@ public class MqttConfig {
                 new MqttPahoMessageDrivenChannelAdapter(CLIENT_ID + "_subscriber", mqttClientFactory(), "vehicle/status");
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
-        adapter.setQos(1);
+        adapter.setQos(mqttQos);
         adapter.setOutputChannel(mqttInputChannel);
         return adapter;
     }
