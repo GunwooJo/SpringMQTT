@@ -96,7 +96,7 @@ public class MqttConfig {
         return messageHandler;
     }
 
-    // 메시지 전송 실패에 대한 핸들러
+    // mqtt 메시지 수신, 발신 중 발생한 예외를 처리하는 코드
     @Bean
     @ServiceActivator(inputChannel = "errorChannel")
     public MessageHandler errorHandler() {
