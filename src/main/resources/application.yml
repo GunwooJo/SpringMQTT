@@ -5,3 +5,5 @@ mqtt:
     output: "default/topic"
   broker:
     url: "tcp://localhost:1883"
+  username: "test"
+  password: "test"

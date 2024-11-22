@@ -35,11 +35,19 @@ public class MqttConfig {
     @Value("${mqtt.topics.output}")
     private String outputTopic;
 
+    @Value("${mqtt.username}")
+    private String username;
+
+    @Value("${mqtt.password}")
+    private String password;
+
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setServerURIs(new String[]{brokerUrl});
         options.setCleanSession(true); // 클라이언트 연결 시 브로커가 이전 세션 정보를 제거하도록 설정.
+        options.setUserName(username);
+        options.setPassword(password.toCharArray());
         return options;
     }
 
